@@ -1,5 +1,7 @@
 import adminSchema from "./models/admin.model.js";
 import bcrypt from "bcrypt";
+import pkg from 'jsonwebtoken';
+const{sign}=pkg;
 // admin register
 export async function adminRegister(req, res) {
   console.log(req.body);
@@ -38,6 +40,28 @@ export async function adminRegister(req, res) {
 
 
 export async  function adminLogin(req,res){
+   try {
+    const {email,password}=req.body;
+    console.log(email,password);
+    const user=await adminSchema.findOne({email});
+    const username=user.username
+    if(user === null) return res.status(401).send({ error: "Incorrect username or password" });
+    const success=await bcrypt.compare(password,user.password);
+    if(success !== true) return res.status(401).send("Incorrect username or password" );
+  
+    const token=await sign({username},process.env.JWT_KEY,{expiresIn:"24hr"})
+   return res.status(200).send({
+    msg: "Successfuly logged in.",
+    token
+  });
+   } catch (error) {
+    return res.status(500).send(error);
+   }
+}
 
-    res.send(req.body)
+// admin Home
+
+
+export async function adminHome(req,res){
+    res.send(req.user.username);
 }
