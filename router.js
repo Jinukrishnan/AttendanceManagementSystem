@@ -4,6 +4,7 @@ const router=Router();
 
 
 router.route('/adminregister').post(requestHandler.adminRegister); 
+router.route('/adminlogin').post(requestHandler.adminLogin); 
 
 
 export default router;
