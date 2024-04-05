@@ -4,18 +4,17 @@ import pkg from 'jsonwebtoken';
 const{sign}=pkg;
 // admin register
 export async function adminRegister(req, res) {
-  console.log(req.body);
+
   const { username, email, phone, password, confirmpassword } = req.body;
-  console.log(username, email, phone, password, confirmpassword);
   try {
     if (!(username && email && phone && password && confirmpassword))
-      return res.status(500).send({ msg: "Fields Are Empty" });
+      return res.status(401).send({ msg: "Fields Are Empty" });
     if (password != confirmpassword)
-      return res.status(500).send({ msg: "Password Not Matched" });
+      return res.status(401).send({ msg: "Password Not Matched" });
    const admindata=await adminSchema.findOne({email})
-   console.log(`admin data${admindata}`);
+
    if(admindata!=null)
-   return res.status(404).send({ msg: `${admindata.email} already exist` });
+   return res.status(401).send({ msg: `${admindata.email} already exist` });
     
     bcrypt
       .hash(password, 10)
@@ -26,14 +25,14 @@ export async function adminRegister(req, res) {
             return res.status(201).send({ msg: "Susscessfully Created" });
           })
           .catch((err) => {
-            return res.status(404).send({ msg: "Not Created" });
+            return res.status(401).send({ msg: "Not Created" });
           });
       })
       .catch((err) => {
-        return res.status(400).send({ msg: "password not hashed" });
+        return res.status(401).send({ msg: "password not hashed" });
       });
   } catch (error) {
-    res.status(404).send({ error });
+    res.status(501).send({ error });
   }
 }
 // admin login
@@ -55,7 +54,7 @@ export async  function adminLogin(req,res){
     token
   });
    } catch (error) {
-    return res.status(500).send(error);
+    return res.status(401).send({msg:"User Not Available"});
    }
 }
 
@@ -63,5 +62,32 @@ export async  function adminLogin(req,res){
 
 
 export async function adminHome(req,res){
-    res.send(req.user.username);
+ 
+    res.status(200).send(req.user.username);
+}
+
+
+
+
+
+// forgetpassword
+export async function forgetPassword(req,res){
+  try {
+    const {email,password,confirmpassword}=req.body
+  if(password!==confirmpassword)
+  return res.status(400).send({msg:"Password Not Matched"});
+  const user=await adminSchema.findOne({email});
+  if(user==null)return res.status(400).send({msg:"email not found"});
+  bcrypt.hash(password,10).then(async(hashpwd)=>{
+    user.password=hashpwd;
+    await user.save();
+    res.status(200).send({msg:"pasword Updated Successfully"});
+  }).catch((error)=>{
+    res.status(400).send(error);
+  })
+  
+  } catch (error) {
+    res.status(400).send(error)
+  }
+ 
 }

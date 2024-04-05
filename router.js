@@ -7,6 +7,7 @@ const router=Router();
 router.route('/adminregister').post(requestHandler.adminRegister); 
 router.route('/adminlogin').post(requestHandler.adminLogin); 
 router.route('/adminhome').get(Auth,requestHandler.adminHome); 
+router.route('/forgetpassword').post(requestHandler.forgetPassword); 
 
 
 export default router;

@@ -5,10 +5,14 @@
   padding: 0;
   margin: 0;
 }
-
-body {
-  font-family: 'Montserrat', sans-serif;
+body{
   background: #dee;
+  font-family: 'Montserrat', sans-serif;
+
+}
+.signinsignup {
+  /* font-family: 'Montserrat', sans-serif; */
+  /* background: #dee; */
   display: flex;
   flex-direction: column;
   justify-content: center;
