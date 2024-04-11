@@ -4,15 +4,16 @@
 .sub1{
     width: 20%;
     height: 100vh;
-    background: linear-gradient(0deg ,rgb(90, 2, 90),rgb(2, 2, 119));
+    background: #163458;
 }
 .sub2{
     width: 80%;
     height: 100vh;
     
+    
 }
 .subnav{
-    background-color: rgb(158, 158, 158);
+    background: #2e63a3;
     padding: 10px;
     display: flex;
     justify-content: space-between;
